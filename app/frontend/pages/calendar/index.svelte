@@ -37,6 +37,11 @@
     "Saturday",
     "Sunday",
   ]
+
+  function formatShortDate(d: Date) {
+    return `${String(d.getDate()).padStart(2, "0")}`
+  }
+
   // Helper to get number of days in a month
   function daysInMonth(year: number, month: number) {
     return new Date(year, month + 1, 0).getDate()
