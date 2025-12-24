@@ -200,3 +200,72 @@
     </main>
   </div>
 </CalendarLayout>
+
+<style lang="postcss">
+  .month-title {
+    margin: 1rem auto 0;
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .calendar-btns {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.25rem;
+    margin-left: 2rem;
+
+    .left-btn,
+    .right-btn {
+      border-radius: 20px;
+      padding: 10px;
+    }
+  }
+
+  .calendar-table-wrapper {
+    margin-top: 1.5rem;
+    border-radius: 16px;
+    overflow-x: auto;
+  }
+
+  .calendar-table {
+    border-collapse: separate;
+    table-layout: fixed;
+    margin: auto;
+  }
+
+  .calendar-table th,
+  .calendar-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .cell-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    &:hover {
+      background-color: green;
+    }
+
+    .solar-date {
+      font-size: 2rem;
+      font-weight: 600;
+    }
+
+    .lunar-date {
+      font-size: 1.2rem;
+      margin-left: 4rem;
+    }
+  }
+</style>
