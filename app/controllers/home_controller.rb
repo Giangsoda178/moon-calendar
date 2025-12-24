@@ -5,6 +5,6 @@ class HomeController < InertiaController
   before_action :perform_authentication
 
   def index
-    redirect_to kitchen_sink_path
+    redirect_to calendar_index_path
   end
 end
