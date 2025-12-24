@@ -1,0 +1,10 @@
+Sign In to Your Account
+=======================
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+Click the link below to securely sign in to your account:
+
+<%= @login_url %>
+
+This link will expire in 15 minutes. If you didn't request this, you can safely ignore this email.

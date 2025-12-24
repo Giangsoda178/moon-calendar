@@ -1,13 +1,72 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style>
-      /* Email styles need to be inline */
-    </style>
-  </head>
-
-  <body>
-    <%= yield %>
-  </body>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title><%= @subject || "Email" %></title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style type="text/css">
+    /* Reset */
+    body, table, td { margin: 0; padding: 0; }
+    img { border: 0; display: block; }
+    a { color: <%= email_colors[:primary] %>; }
+    /* System font stack (matches application.css) */
+    body, table, td, p, a, h1, h2, h3 {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body { line-height: 1.5; }
+    /* Dark mode support (Gmail, Apple Mail) */
+    @media (prefers-color-scheme: dark) {
+      .email-body { background-color: <%= email_colors[:background] %> !important; }
+      .email-container { background-color: <%= email_colors[:card] %> !important; }
+    }
+    /* Responsive (480px mobile breakpoint) */
+    @media only screen and (max-width: 480px) {
+      .email-container { width: 100% !important; }
+      .email-container td { padding-left: 16px !important; padding-right: 16px !important; }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: <%= email_colors[:background] %>;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" class="email-body"
+         style="background-color: <%= email_colors[:background] %>;">
+    <tr>
+      <td align="center" style="padding: 24px 16px;">
+        <!-- Email Container - 600px max -->
+        <table role="presentation" cellpadding="0" cellspacing="0" width="600" class="email-container"
+               style="max-width: 600px; width: 100%; background-color: <%= email_colors[:card] %>; border-radius: 8px;">
+          <!-- Header -->
+          <tr>
+            <td>
+              <%= render "mailers/shared/header" %>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 24px 32px; color: <%= email_colors[:foreground] %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 16px; line-height: 1.6;">
+              <%= yield %>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td>
+              <%= render "mailers/shared/footer" %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>

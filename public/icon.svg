@@ -1,3 +1,29 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 375" height="500" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <clipPath id="logo-clip">
+      <path d="M 75 0 L 300 0 C 341.421875 0 375 33.578125 375 75 L 375 300 C 375 341.421875 341.421875 375 300 375 L 75 375 C 33.578125 375 0 341.421875 0 300 L 0 75 C 0 33.578125 33.578125 0 75 0 Z"/>
+    </clipPath>
+  </defs>
+  <!-- Background -->
+  <g clip-path="url(#logo-clip)">
+    <rect x="-82.5" width="540" fill="var(--primary-foreground, #0a0a0a)" height="540" y="-82.5"/>
+  </g>
+  <!-- Letter L -->
+  <g fill="var(--primary, #fafafa)">
+    <g transform="translate(35.616406, 270.624438)">
+      <path d="M 98.171875 -24.578125 L 98.171875 0 L 0 0 L 0 -171.890625 L 24.578125 -171.890625 L 24.578125 -122.75 L 98.171875 -122.75 L 98.171875 -98.171875 L 122.75 -98.171875 L 122.75 -24.578125 Z M 24.578125 -24.578125 L 97.9375 -24.578125 L 97.9375 -98.171875 L 24.578125 -98.171875 Z"/>
+    </g>
+  </g>
+  <!-- Letter M -->
+  <g fill="var(--primary, #fafafa)">
+    <g transform="translate(175.593652, 270.624438)">
+      <path d="M 122.75 -98.171875 L 122.75 0 L 98.171875 0 L 98.171875 -98.171875 L 24.578125 -98.171875 L 24.578125 0 L 0 0 L 0 -122.75 L 98.171875 -122.75 L 98.171875 -98.171875 Z"/>
+    </g>
+  </g>
+  <!-- Accent dot -->
+  <g fill="var(--logo-highlight, var(--primary, #fafafa))">
+    <g transform="translate(315.577325, 270.624438)">
+      <path d="M 0 -24.578125 L 24.578125 -24.578125 L 24.578125 0 L 0 0 Z"/>
+    </g>
+  </g>
 </svg>

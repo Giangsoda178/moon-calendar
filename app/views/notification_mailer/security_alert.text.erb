@@ -1,0 +1,23 @@
+Security Alert
+==============
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+We detected unusual activity on your account:
+
+<%= @event[:type] || @event.try(:type) || "Security Event" %>
+<% if @event[:ip_address] || @event.try(:ip_address) %>
+IP Address: <%= @event[:ip_address] || @event.try(:ip_address) %>
+<% end %>
+<% if @event[:location] || @event.try(:location) %>
+Location: <%= @event[:location] || @event.try(:location) %>
+<% end %>
+<% if @event[:device] || @event.try(:device) %>
+Device: <%= @event[:device] || @event.try(:device) %>
+<% end %>
+
+Was this you? If you recognize this activity, no further action is needed.
+
+Secure your account: <%= @event[:secure_url] || @event.try(:secure_url) || "[security link]" %>
+
+If this wasn't you, please change your password immediately.

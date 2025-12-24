@@ -1,0 +1,26 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  Account Deleted
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0;">
+  We're sorry to see you go. Your account has been successfully deleted as requested.
+</p>
+
+<%= render "mailers/shared/card" do %>
+  <p style="margin: 0; color: <%= email_colors[:foreground] %>;">
+    <strong>What happens now?</strong>
+  </p>
+  <ul style="margin: 8px 0 0 0; padding-left: 20px; color: <%= email_colors[:foreground] %>;">
+    <li style="margin-bottom: 8px;">Your personal data has been removed</li>
+    <li style="margin-bottom: 8px;">Any active subscriptions have been cancelled</li>
+    <li style="margin-bottom: 8px;">This action cannot be undone</li>
+  </ul>
+<% end %>
+
+<p style="margin: 16px 0 0 0; font-size: 14px; color: <%= email_colors[:muted_foreground] %>;">
+  If you didn't request this deletion or believe this was a mistake, please contact our support team immediately.
+</p>

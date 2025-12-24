@@ -1,0 +1,11 @@
+Your Email is Verified!
+=======================
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+Great news! Your email address has been successfully verified. Your account is now fully activated.
+
+What's next?
+You now have full access to all features. Start exploring and make the most of your account.
+
+Go to dashboard: <%= @dashboard_url || "[dashboard link]" %>

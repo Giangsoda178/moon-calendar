@@ -1,0 +1,42 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  Payment Receipt
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0;">
+  Thank you for your payment! Here's your receipt:
+</p>
+
+<%= render "mailers/shared/card" do %>
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;">
+    <tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid <%= email_colors[:border] %>; color: <%= email_colors[:muted_foreground] %>;">Invoice #</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid <%= email_colors[:border] %>; text-align: right; color: <%= email_colors[:foreground] %>;"><%= @invoice[:number] || @invoice.try(:number) %></td>
+    </tr>
+    <% if @invoice[:date] || @invoice.try(:date) %>
+    <tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid <%= email_colors[:border] %>; color: <%= email_colors[:muted_foreground] %>;">Date</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid <%= email_colors[:border] %>; text-align: right; color: <%= email_colors[:foreground] %>;"><%= (@invoice[:date] || @invoice.try(:date))&.strftime("%B %d, %Y") %></td>
+    </tr>
+    <% end %>
+    <% if @invoice[:description] || @invoice.try(:description) %>
+    <tr>
+      <td style="padding: 8px 0; border-bottom: 1px solid <%= email_colors[:border] %>; color: <%= email_colors[:muted_foreground] %>;">Description</td>
+      <td style="padding: 8px 0; border-bottom: 1px solid <%= email_colors[:border] %>; text-align: right; color: <%= email_colors[:foreground] %>;"><%= @invoice[:description] || @invoice.try(:description) %></td>
+    </tr>
+    <% end %>
+    <tr>
+      <td style="padding: 12px 0; font-weight: 600; color: <%= email_colors[:foreground] %>;">Total</td>
+      <td style="padding: 12px 0; text-align: right; font-weight: 600; font-size: 18px; color: <%= email_colors[:primary] %>;"><%= @invoice[:amount] || @invoice.try(:amount) %></td>
+    </tr>
+  </table>
+<% end %>
+
+<%= render "mailers/shared/button", text: "View Invoice", url: @invoice[:url] || @invoice.try(:url) || "#", icon: :external_link %>
+
+<p style="margin: 16px 0 0 0; font-size: 14px; color: <%= email_colors[:muted_foreground] %>;">
+  Questions about this charge? Reply to this email or contact our support team.
+</p>

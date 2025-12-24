@@ -1,0 +1,81 @@
+/* MyFoodLink Theme - Light */
+/* Using :root[data-theme] for higher specificity than :root alone */
+/* Brand colors: blue-100 #042858 (dark blue), mfl-green #D7F56C (lime) */
+:root[data-theme="myfoodlink"] {
+    --background: oklch(0.98 0.005 247);       /* grey-10 - slight blue tint */
+    --foreground: oklch(0.25 0.04 246);        /* blue-100 - brand dark blue */
+    --card: oklch(1 0 0);                      /* white */
+    --card-foreground: oklch(0.25 0.04 246);   /* blue-100 */
+    --popover: oklch(1 0 0);                   /* white */
+    --popover-foreground: oklch(0.25 0.04 246);/* blue-100 */
+    --primary: oklch(0.91 0.18 115);           /* mfl-green - lime accent */
+    --primary-foreground: oklch(0.25 0.04 246);/* blue-100 (dark text for contrast) */
+    --progress: oklch(0.25 0.04 246);          /* blue-100 - for progress bars */
+    --secondary: oklch(0.95 0.01 247);         /* grey-15 - subtle */
+    --secondary-foreground: oklch(0.25 0.04 246);/* blue-100 */
+    --muted: oklch(0.95 0.01 247);             /* grey-15 */
+    --muted-foreground: oklch(0.45 0.02 247);  /* grey-60 - WCAG AA compliant */
+    --accent: oklch(0.90 0.04 224);            /* blue-10 - light blue accent */
+    --accent-foreground: oklch(0.25 0.04 246); /* blue-100 */
+    --destructive: oklch(0.55 0.22 27);        /* mfl-error */
+    --destructive-foreground: oklch(1 0 0);    /* white */
+    --border: oklch(0.88 0.01 247);            /* grey-25 - visible border */
+    --input: oklch(0.92 0.01 247);             /* grey-20 - lighter input bg */
+    --ring: oklch(0.50 0.12 246);              /* blue-60 - stronger ring */
+    --chart-1: oklch(0.25 0.04 246);           /* blue-100 */
+    --chart-2: oklch(0.60 0.17 148);           /* mfl-success */
+    --chart-3: oklch(0.72 0.19 50);            /* mfl-orange */
+    --chart-4: oklch(0.65 0.17 74);            /* mfl-warning */
+    --chart-5: oklch(0.91 0.18 115);           /* mfl-green */
+    --sidebar: oklch(0.25 0.04 246);           /* blue-100 */
+    --sidebar-foreground: oklch(0.98 0 0);     /* off-white */
+    --sidebar-primary: oklch(0.91 0.18 115);   /* mfl-green */
+    --sidebar-primary-foreground: oklch(0.25 0.04 246);/* blue-100 */
+    --sidebar-accent: oklch(0.35 0.06 246);    /* blue-80 */
+    --sidebar-accent-foreground: oklch(0.98 0 0);/* off-white */
+    --sidebar-border: oklch(0.35 0.06 246);    /* blue-80 */
+    --sidebar-ring: oklch(0.91 0.18 115);      /* mfl-green */
+    --logo-highlight: oklch(0.91 0.18 115);   /* mfl-green - lime accent */
+    --logo-highlight-foreground: oklch(0.25 0.04 246);  /* primary-foreground (blue-100) for contrast */
+}
+
+/* MyFoodLink Theme - Dark */
+/* Elevation hierarchy: sidebar (0.14) < background (0.18) < card (0.22) < popover (0.26) */
+:root[data-theme="myfoodlink"].dark {
+    --background: oklch(0.18 0.03 246);        /* dark blue base */
+    --foreground: oklch(0.94 0.01 247);        /* off-white with blue tint */
+    --card: oklch(0.22 0.04 246);              /* elevated from bg */
+    --card-foreground: oklch(0.94 0.01 247);   /* off-white */
+    --popover: oklch(0.26 0.05 246);           /* most elevated */
+    --popover-foreground: oklch(0.94 0.01 247);/* off-white */
+    --primary: oklch(0.91 0.18 115);           /* mfl-green - lime accent */
+    --primary-foreground: oklch(0.18 0.03 246);/* dark blue (dark text for contrast) */
+    --progress: oklch(0.58 0.12 246);          /* blue-50 - for progress bars */
+    --secondary: oklch(0.28 0.05 246);         /* subtle blue */
+    --secondary-foreground: oklch(0.94 0.01 247);/* off-white */
+    --muted: oklch(0.24 0.04 246);             /* between bg and card */
+    --muted-foreground: oklch(0.72 0.02 247);  /* readable muted - WCAG AA */
+    --accent: oklch(0.30 0.06 246);            /* noticeable blue accent */
+    --accent-foreground: oklch(0.94 0.01 247); /* off-white */
+    --destructive: oklch(0.62 0.20 27);        /* bright red for visibility */
+    --destructive-foreground: oklch(1 0 0);    /* white */
+    --border: oklch(0.32 0.05 246);            /* visible border */
+    --input: oklch(0.26 0.04 246);             /* input bg - matches popover */
+    --ring: oklch(0.91 0.18 115);              /* mfl-green - focus ring */
+    --chart-1: oklch(0.58 0.12 246);           /* blue-50 */
+    --chart-2: oklch(0.68 0.17 148);           /* bright success */
+    --chart-3: oklch(0.75 0.19 50);            /* bright orange */
+    --chart-4: oklch(0.72 0.17 74);            /* bright warning */
+    --chart-5: oklch(0.91 0.18 115);           /* mfl-green */
+    --sidebar: oklch(0.14 0.03 246);           /* darkest - below bg */
+    --sidebar-foreground: oklch(0.94 0.01 247);/* off-white */
+    --sidebar-primary: oklch(0.91 0.18 115);   /* mfl-green */
+    --sidebar-primary-foreground: oklch(0.14 0.03 246);/* darkest blue */
+    --sidebar-accent: oklch(0.22 0.04 246);    /* elevated */
+    --sidebar-accent-foreground: oklch(0.94 0.01 247);/* off-white */
+    --sidebar-border: oklch(0.28 0.05 246);    /* visible border */
+    --sidebar-ring: oklch(0.91 0.18 115);      /* mfl-green */
+    --logo-highlight: oklch(0.91 0.18 115);   /* mfl-green - lime accent */
+    --logo-highlight-foreground: oklch(0.18 0.03 246);  /* primary-foreground (dark blue) for contrast */
+}
+

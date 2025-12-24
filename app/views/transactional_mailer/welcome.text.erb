@@ -1,0 +1,14 @@
+Welcome to the App!
+===================
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+We're excited to have you on board. Here's what you can do to get started:
+
+* Complete your profile
+* Explore our features
+* Connect with others
+
+Get started: <%= @dashboard_url || "[dashboard link]" %>
+
+Questions? Reply to this email or visit our help center.

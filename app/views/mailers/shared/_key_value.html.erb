@@ -1,0 +1,27 @@
+<%# Usage: render "mailers/shared/key_value", items: [{ label: "Invoice #", value: "INV-001" }] %>
+<%# Optional: title: "Invoice Details" %>
+<%
+  items = local_assigns[:items] || []
+  title = local_assigns[:title]
+%>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+       style="margin: 16px 0;">
+  <% if title %>
+  <tr>
+    <td colspan="2" style="padding-bottom: 12px; font-weight: 600; font-size: 14px; color: <%= email_colors[:foreground] %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <%= title %>
+    </td>
+  </tr>
+  <% end %>
+
+  <% items.each do |item| %>
+  <tr>
+    <td style="padding: 6px 0; width: 40%; color: <%= email_colors[:muted_foreground] %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px;">
+      <%= item[:label] %>
+    </td>
+    <td style="padding: 6px 0; width: 60%; text-align: right; color: <%= email_colors[:foreground] %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; <%= 'font-weight: 600;' if item[:bold] %>">
+      <%= item[:value] %>
+    </td>
+  </tr>
+  <% end %>
+</table>

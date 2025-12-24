@@ -1,0 +1,34 @@
+<%# Usage: render "mailers/shared/social_icons", links: [{ platform: "linkedin", url: "..." }] %>
+<%# Supported platforms: linkedin, twitter, github, facebook, instagram, youtube %>
+<%
+  # Default icon size for social icons
+  icon_size = local_assigns[:size] || 20
+
+  # Platform icon mapping (uses email_icon helper from Phase 1)
+  platform_icons = {
+    "linkedin" => :linkedin,
+    "twitter" => :twitter,
+    "github" => :github,
+    "facebook" => :facebook,
+    "instagram" => :instagram,
+    "youtube" => :youtube
+  }
+
+  # Filter to valid links only
+  valid_links = (local_assigns[:links] || []).select { |l| platform_icons.key?(l[:platform].to_s) }
+%>
+<% if valid_links.any? %>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+  <tr>
+    <% valid_links.each_with_index do |link, i| %>
+      <td style="<%= 'padding-left: 12px;' if i > 0 %>">
+        <a href="<%= safe_email_url(link[:url]) %>"
+           style="display: inline-block; text-decoration: none;"
+           title="<%= link[:platform].to_s.titleize %>">
+          <%= email_icon(platform_icons[link[:platform].to_s], size: icon_size, color: email_colors[:muted_foreground]) %>
+        </a>
+      </td>
+    <% end %>
+  </tr>
+</table>
+<% end %>

@@ -1,0 +1,11 @@
+Status Update
+=============
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+Your status has been updated:
+
+Previous: <%= @status[:previous] || @status.try(:previous) || "N/A" %>
+New: <%= @status[:current] || @status.try(:current) || "N/A" %>
+
+View details: <%= @status[:url] || @status.try(:url) || "[status link]" %>

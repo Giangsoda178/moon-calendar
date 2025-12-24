@@ -1,1 +1,11 @@
+================================================================================
+<%= @header_title || "Your App" %>
+================================================================================
+
 <%= yield %>
+
+--------------------------------------------------------------------------------
+(c) <%= Date.today.year %> Your Company. All rights reserved.
+
+Unsubscribe: <%= @unsubscribe_url || "[unsubscribe link]" %>
+Privacy Policy: <%= @privacy_url || "[privacy link]" %>

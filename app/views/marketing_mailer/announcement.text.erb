@@ -1,0 +1,19 @@
+<%= @announcement[:title] || @announcement.try(:title) || "Announcement" %>
+<%= "=" * (@announcement[:title] || @announcement.try(:title) || "Announcement").length %>
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+<%= @announcement[:body] || @announcement.try(:body) || "We have exciting news to share!" %>
+
+<% features = @announcement[:features] || @announcement.try(:features) %>
+<% if features&.any? %>
+What's New:
+<% features.each do |feature| %>
+* <%= feature %>
+<% end %>
+<% end %>
+
+Learn more: <%= @announcement[:cta_url] || @announcement.try(:cta_url) || "[announcement link]" %>
+
+---
+Unsubscribe: <%= @unsubscribe_url || "[unsubscribe link]" %>

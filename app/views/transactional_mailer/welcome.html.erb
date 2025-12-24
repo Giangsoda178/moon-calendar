@@ -1,0 +1,25 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  Welcome to the App!
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0;">
+  We're excited to have you on board. Here's what you can do to get started:
+</p>
+
+<%= render "mailers/shared/card" do %>
+  <ul style="margin: 0; padding-left: 20px; color: <%= email_colors[:foreground] %>;">
+    <li style="margin-bottom: 8px;">Complete your profile</li>
+    <li style="margin-bottom: 8px;">Explore our features</li>
+    <li style="margin-bottom: 8px;">Connect with others</li>
+  </ul>
+<% end %>
+
+<%= render "mailers/shared/button", text: "Get Started", url: @dashboard_url || "#", icon: :arrow_right %>
+
+<p style="margin: 16px 0 0 0; font-size: 14px; color: <%= email_colors[:muted_foreground] %>;">
+  Questions? Reply to this email or visit our help center.
+</p>

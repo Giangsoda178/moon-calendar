@@ -1,0 +1,358 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# =============================================================================
+# bin/refs - Reference Repository Manager for Claude Code
+# =============================================================================
+# Manages reference repositories for AI-assisted development.
+# Supports cloning, updating, version matching, and repomix generation.
+#
+# Usage:
+#   bin/refs              # Update all references
+#   bin/refs --repomix    # Update all + generate repomix outputs
+#   bin/refs add <name> <github_url> [--include=docs,src]
+#   bin/refs remove <name>
+#   bin/refs list         # Show all references with status
+#   bin/refs clean        # Remove all repomix outputs
+#
+# =============================================================================
+
+require "json"
+require "fileutils"
+
+REFS_DIR = File.expand_path("../references", __dir__)
+REFS_CONFIG = File.join(REFS_DIR, ".refs.json")
+
+# =============================================================================
+# CLI UTILITIES
+# =============================================================================
+
+def say(label, message, color = :green)
+  label = label.to_s.rjust(12)
+  puts [colorize(label, color), message].join(" ")
+end
+
+def colorize(str, color)
+  return str unless $stdout.tty?
+
+  code = { red: 31, green: 32, yellow: 33, blue: 34, magenta: 35, cyan: 36 }.fetch(color, 0)
+  "\e[0;#{code};49m#{str}\e[0m"
+end
+
+def run(cmd, silent: false)
+  say(:run, cmd, :blue) unless silent
+  system(cmd, out: silent ? File::NULL : $stdout, err: silent ? File::NULL : $stderr)
+end
+
+def run!(cmd, silent: false)
+  run(cmd, silent: silent) || abort(colorize("Command failed: #{cmd}", :red))
+end
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+DEFAULT_REFS = {
+  "inertia-rails" => {
+    "repo" => "https://github.com/inertiajs/inertia-rails.git",
+    "include" => ["docs", "lib"],
+    "match_gem" => "inertia_rails"
+  },
+  "basecoat" => {
+    "repo" => "https://github.com/hunvreus/basecoat.git",
+    "include" => ["docs", "src/js"]
+  },
+  "pagy" => {
+    "repo" => "https://github.com/ddnexus/pagy.git",
+    "include" => ["docs", "lib"],
+    "match_gem" => "pagy"
+  },
+  "layerchart" => {
+    "repo" => "https://github.com/techniq/layerchart.git",
+    "include" => ["packages/layerchart/src"],
+    "match_npm" => "layerchart"
+  },
+  "shadcn-svelte" => {
+    "repo" => "https://github.com/huntabyte/shadcn-svelte.git",
+    "include" => ["docs", "packages"]
+  },
+  "floating-ui" => {
+    "repo" => "https://github.com/floating-ui/floating-ui.git",
+    "include" => ["packages"]
+  },
+  "graffiti" => {
+    "repo" => "https://github.com/stolinski/graffiti.git",
+    "include" => ["src"]
+  },
+  "konsta-ui" => {
+    "repo" => "https://github.com/konstaui/konsta.git",
+    "include" => ["src"]
+  },
+  "svelte-bottom-sheet" => {
+    "repo" => "https://github.com/AuxiDev/svelte-bottom-sheet.git",
+    "include" => ["src"]
+  },
+  "svelte.dev" => {
+    "repo" => "https://github.com/sveltejs/svelte.dev.git",
+    "include" => ["apps/svelte.dev/content"]
+  }
+}.freeze
+
+def load_config
+  return DEFAULT_REFS unless File.exist?(REFS_CONFIG)
+
+  JSON.parse(File.read(REFS_CONFIG))
+rescue JSON::ParserError
+  DEFAULT_REFS
+end
+
+def save_config(config)
+  File.write(REFS_CONFIG, JSON.pretty_generate(config))
+end
+
+# =============================================================================
+# VERSION DETECTION
+# =============================================================================
+
+def detect_gem_version(gem_name)
+  gemfile_lock = File.expand_path("../Gemfile.lock", __dir__)
+  return nil unless File.exist?(gemfile_lock)
+
+  content = File.read(gemfile_lock)
+  match = content.match(/^\s+#{Regexp.escape(gem_name)}\s+\(([^)]+)\)/)
+  match&.[](1)
+end
+
+def detect_npm_version(package_name)
+  package_json = File.expand_path("../package.json", __dir__)
+  return nil unless File.exist?(package_json)
+
+  pkg = JSON.parse(File.read(package_json))
+  version = pkg.dig("dependencies", package_name) || pkg.dig("devDependencies", package_name)
+  version&.gsub(/[\^~>=<]/, "")&.split(".")&.first(2)&.join(".")
+rescue JSON::ParserError
+  nil
+end
+
+def find_matching_tag(ref_path, version)
+  return nil unless version
+
+  tags = `git -C "#{ref_path}" tag -l 2>/dev/null`.split("\n")
+
+  # Try exact match first
+  exact = tags.find { |t| t.match?(/v?#{Regexp.escape(version)}$/i) }
+  return exact if exact
+
+  # Try major.minor match
+  major_minor = version.split(".").first(2).join(".")
+  tags.select { |t| t.include?(major_minor) }
+      .max_by { |t| t.scan(/\d+/).map(&:to_i) }
+end
+
+# =============================================================================
+# REPOSITORY OPERATIONS
+# =============================================================================
+
+def clone_repo(name, config)
+  path = File.join(REFS_DIR, name)
+  repo = config["repo"]
+
+  if Dir.exist?(path)
+    say(:exists, name, :yellow)
+    return false
+  end
+
+  say(:clone, "#{name} from #{repo}", :green)
+  run!("git clone --depth 1 #{repo} #{path}", silent: true)
+  true
+end
+
+def update_repo(name, config)
+  path = File.join(REFS_DIR, name)
+
+  unless Dir.exist?(File.join(path, ".git"))
+    say(:skip, "#{name} (not a git repo)", :yellow)
+    return false
+  end
+
+  # Detect version to match
+  version = nil
+  if config["match_gem"]
+    version = detect_gem_version(config["match_gem"])
+    say(:version, "#{name} gem: #{version || 'latest'}", :cyan) if version
+  elsif config["match_npm"]
+    version = detect_npm_version(config["match_npm"])
+    say(:version, "#{name} npm: #{version || 'latest'}", :cyan) if version
+  end
+
+  # Fetch latest
+  say(:fetch, name, :blue)
+  run("git -C #{path} fetch --tags --depth 1 origin", silent: true)
+
+  # Find matching tag or use main
+  if version
+    tag = find_matching_tag(path, version)
+    if tag
+      say(:checkout, "#{name} → #{tag}", :green)
+      run!("git -C #{path} checkout #{tag} 2>/dev/null", silent: true)
+      return true
+    end
+  end
+
+  # Default: update to latest main/master
+  default_branch = `git -C #{path} symbolic-ref refs/remotes/origin/HEAD 2>/dev/null`.strip.split("/").last
+  default_branch = "main" if default_branch.empty?
+
+  say(:update, "#{name} → #{default_branch}", :green)
+  run("git -C #{path} checkout #{default_branch} 2>/dev/null", silent: true)
+  run("git -C #{path} pull --ff-only origin #{default_branch} 2>/dev/null", silent: true)
+  true
+end
+
+def remove_repo(name)
+  path = File.join(REFS_DIR, name)
+
+  unless Dir.exist?(path)
+    say(:skip, "#{name} (not found)", :yellow)
+    return false
+  end
+
+  say(:remove, name, :red)
+  FileUtils.rm_rf(path)
+  true
+end
+
+# =============================================================================
+# REPOMIX GENERATION
+# =============================================================================
+
+def generate_repomix(name, config)
+  path = File.join(REFS_DIR, name)
+  output = File.join(path, "repomix-output.xml")
+
+  unless Dir.exist?(path)
+    say(:skip, "#{name} (not found)", :yellow)
+    return false
+  end
+
+  includes = config["include"] || []
+  include_pattern = includes.empty? ? "" : "--include \"#{includes.map { |i| "#{i}/**" }.join(",")}\""
+
+  say(:repomix, name, :magenta)
+
+  # Check if repomix is available
+  unless system("which npx > /dev/null 2>&1")
+    say(:error, "npx not found, skipping repomix", :red)
+    return false
+  end
+
+  cmd = "cd #{path} && npx repomix@latest #{include_pattern} --output repomix-output.xml 2>/dev/null"
+  if run(cmd, silent: true)
+    size = File.size(output) / 1024.0
+    say(:done, "#{name}/repomix-output.xml (#{size.round(1)}KB)", :green)
+    true
+  else
+    say(:error, "repomix failed for #{name}", :red)
+    false
+  end
+end
+
+def clean_repomix
+  Dir.glob(File.join(REFS_DIR, "**/repomix-output.xml")).each do |file|
+    say(:remove, file.sub("#{REFS_DIR}/", ""), :yellow)
+    File.delete(file)
+  end
+end
+
+# =============================================================================
+# LIST REFERENCES
+# =============================================================================
+
+def list_refs(config)
+  puts colorize("\n  Reference Repositories", :cyan)
+  puts "  " + "=" * 60
+
+  config.each do |name, cfg|
+    path = File.join(REFS_DIR, name)
+    status = Dir.exist?(path) ? colorize("✓", :green) : colorize("✗", :red)
+
+    version_info = ""
+    if cfg["match_gem"]
+      v = detect_gem_version(cfg["match_gem"])
+      version_info = " (gem: #{v})" if v
+    elsif cfg["match_npm"]
+      v = detect_npm_version(cfg["match_npm"])
+      version_info = " (npm: #{v})" if v
+    end
+
+    repomix = File.exist?(File.join(path, "repomix-output.xml")) ? " 📦" : ""
+
+    puts "  #{status} #{name.ljust(20)}#{version_info}#{repomix}"
+  end
+
+  puts
+end
+
+# =============================================================================
+# MAIN
+# =============================================================================
+
+def main
+  FileUtils.mkdir_p(REFS_DIR)
+  config = load_config
+
+  case ARGV[0]
+  when "add"
+    name = ARGV[1]
+    repo = ARGV[2]
+    abort "Usage: bin/refs add <name> <github_url>" unless name && repo
+
+    includes = ARGV.find { |a| a.start_with?("--include=") }&.sub("--include=", "")&.split(",") || []
+    config[name] = { "repo" => repo, "include" => includes }
+    save_config(config)
+    clone_repo(name, config[name])
+
+  when "remove"
+    name = ARGV[1]
+    abort "Usage: bin/refs remove <name>" unless name
+
+    remove_repo(name)
+    config.delete(name)
+    save_config(config)
+
+  when "list"
+    list_refs(config)
+
+  when "clean"
+    clean_repomix
+
+  when "repomix"
+    name = ARGV[1]
+    if name
+      generate_repomix(name, config[name] || {})
+    else
+      config.each { |n, c| generate_repomix(n, c) }
+    end
+
+  else
+    # Default: update all
+    generate_repomix_flag = ARGV.include?("--repomix")
+
+    config.each do |name, cfg|
+      path = File.join(REFS_DIR, name)
+
+      if Dir.exist?(path)
+        update_repo(name, cfg)
+      else
+        clone_repo(name, cfg)
+      end
+
+      generate_repomix(name, cfg) if generate_repomix_flag
+    end
+
+    say(:done, "All references updated!", :green)
+    say(:tip, "Run 'bin/refs --repomix' to generate token-optimized outputs", :cyan) unless generate_repomix_flag
+  end
+end
+
+main

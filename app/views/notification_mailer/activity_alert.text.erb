@@ -1,0 +1,11 @@
+New Activity on Your Account
+============================
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+There's been new activity on your account:
+
+<%= @activity[:type] || @activity.try(:type) || "Activity" %>
+<%= @activity[:description] || @activity.try(:description) %>
+
+View details: <%= @activity[:url] || @activity.try(:url) || "[activity link]" %>

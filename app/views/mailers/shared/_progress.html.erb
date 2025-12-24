@@ -1,0 +1,23 @@
+<%# Usage: render "mailers/shared/progress", percent: 65, label: "65% complete" %>
+<%# Custom progress bar using theme colors (--primary, --muted) %>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin: 16px 0;">
+  <tr>
+    <td style="background: <%= email_colors[:muted] %>; height: 8px; border-radius: 9999px;">
+      <!--[if mso]>
+        <table role="presentation" cellpadding="0" cellspacing="0" width="<%= percent %>%" style="background: <%= email_colors[:primary] %>; height: 8px;">
+          <tr><td></td></tr>
+        </table>
+      <![endif]-->
+      <!--[if !mso]><!-->
+      <div style="background: <%= email_colors[:primary] %>; height: 8px; border-radius: 9999px; width: <%= percent %>%;"></div>
+      <!--<![endif]-->
+    </td>
+  </tr>
+  <% if local_assigns[:label] %>
+  <tr>
+    <td style="font-size: 12px; color: <%= email_colors[:muted_foreground] %>; padding-top: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <%= label %>
+    </td>
+  </tr>
+  <% end %>
+</table>

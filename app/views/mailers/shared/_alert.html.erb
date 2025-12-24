@@ -1,0 +1,25 @@
+<%# Usage: render "mailers/shared/alert", variant: :default do ...content... end %>
+<%# Or: render "mailers/shared/alert", variant: :default, content: "..." (for render_to_string) %>
+<%# Variants: :default, :destructive %>
+<%# Aligns with application.css .alert: rounded-lg (8px), border, px-4 (16px), py-3 (12px), text-sm (14px) %>
+<%
+  variants = {
+    default: { bg: email_colors[:card], fg: email_colors[:card_foreground], border: email_colors[:border] },
+    destructive: { bg: email_colors[:card], fg: email_colors[:destructive], border: email_colors[:border] }
+  }
+  v = (local_assigns[:variant] || :default).to_sym
+  c = variants[v] || variants[:default]
+%>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin: 16px 0;">
+  <tr>
+    <td style="background: <%= c[:bg] %>; border: 1px solid <%= c[:border] %>; border-radius: 8px; padding: 12px 16px;">
+      <div style="font-size: 14px; color: <%= c[:fg] %>; line-height: 1.5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+<% if local_assigns[:content] -%>
+<%= local_assigns[:content] %>
+<% else -%>
+<%= yield %>
+<% end -%>
+      </div>
+    </td>
+  </tr>
+</table>

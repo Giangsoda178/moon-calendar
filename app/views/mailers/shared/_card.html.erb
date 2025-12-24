@@ -1,0 +1,15 @@
+<%# Usage: render "mailers/shared/card" do ...content... end %>
+<%# Or: render "mailers/shared/card", content: "..." (for render_to_string) %>
+<%# Aligns with application.css .card: rounded-xl (12px), border, py-6 (24px), shadow-sm, bg-card %>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+       style="margin: 16px 0; background-color: <%= email_colors[:card] %>; border: 1px solid <%= email_colors[:border] %>; border-radius: 12px;">
+  <tr>
+    <td style="padding: 24px 16px; color: <%= email_colors[:card_foreground] %>;">
+<% if local_assigns[:content] -%>
+<%= local_assigns[:content] %>
+<% else -%>
+<%= yield %>
+<% end -%>
+    </td>
+  </tr>
+</table>

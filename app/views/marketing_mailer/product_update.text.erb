@@ -1,0 +1,37 @@
+Product Update<% version = @update[:version] || @update.try(:version) %><%= ": #{version}" if version %>
+<%= "=" * ("Product Update#{version ? ": #{version}" : ""}".length) %>
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+<%= @update[:intro] || @update.try(:intro) || "We've been busy improving the product. Here's what's new:" %>
+
+<% features = @update[:features] || @update.try(:features) %>
+<% if features&.any? %>
+NEW FEATURES
+<% features.each do |feature| %>
+* <%= feature %>
+<% end %>
+<% end %>
+
+<% improvements = @update[:improvements] || @update.try(:improvements) %>
+<% if improvements&.any? %>
+IMPROVEMENTS
+<% improvements.each do |item| %>
+* <%= item %>
+<% end %>
+<% end %>
+
+<% bug_fixes = @update[:bug_fixes] || @update.try(:bug_fixes) %>
+<% if bug_fixes&.any? %>
+BUG FIXES
+<% bug_fixes.each do |item| %>
+* <%= item %>
+<% end %>
+<% end %>
+
+See full changelog: <%= @update[:changelog_url] || @update.try(:changelog_url) || "[changelog link]" %>
+
+Have feedback? Reply to this email or visit our feedback page.
+
+---
+Unsubscribe: <%= @unsubscribe_url || "[unsubscribe link]" %>

@@ -2,10 +2,11 @@
 <html>
   <head>
     <title><%= content_for(:title) || "Moon Calendar" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Moon Calendar">
     <meta name="mobile-web-app-capable" content="yes">
+    <%= capybara_lockstep if defined?(Capybara::Lockstep) %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -18,9 +19,21 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <script>
+      <%# Inline FOUC prevention for appearance mode and theme variant %>
+      (function() {
+        var a = localStorage.getItem('appearance') || 'system';
+        var isDark = a === 'dark' || (a === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', isDark);
+        var v = localStorage.getItem('themeVariant');
+        if (v && v !== 'default') document.documentElement.setAttribute('data-theme', v);
+      })();
+    </script>
+
+    <%= vite_stylesheet_tag "application" %>
+    <%= vite_client_tag %>
+    <%= vite_typescript_tag "inertia" %>
+    <%= inertia_ssr_head %>
   </head>
 
   <body>

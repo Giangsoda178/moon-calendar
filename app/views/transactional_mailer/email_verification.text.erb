@@ -1,0 +1,10 @@
+Verify Your Email Address
+=========================
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+Thanks for signing up! Please verify your email address by visiting:
+
+<%= @verification_url %>
+
+If you didn't create an account, no action is needed.

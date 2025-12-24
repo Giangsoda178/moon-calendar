@@ -1,0 +1,44 @@
+<%# Usage: render "mailers/shared/button", text: "Click Here", url: "https://..." %>
+<%# Optional: icon: :arrow_right (uses email_icon helper), align: "left"/"center"/"right" (default: center) %>
+<%# Aligns with application.css .btn-primary: h-9 (36px), px-4 (16px), rounded-md (6px) %>
+<%
+  # Validate URL to prevent XSS (javascript:, data:, vbscript:)
+  # Allowed: https, http, mailto, tel, # anchors
+  # Note: Unlike frontend link-utils, we don't allow / paths since emails render outside app
+  safe_url = if url.to_s.match?(/\A(https?:\/\/|mailto:|tel:|#)/i)
+    url.to_s
+  else
+    "#"
+  end
+  align = local_assigns[:align] || "center"
+  icon_name = local_assigns[:icon]
+%>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin: 16px 0;">
+  <tr>
+    <td align="<%= align %>">
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <!--[if mso]>
+              <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml"
+                           xmlns:w="urn:schemas-microsoft-com:office:word"
+                           href="<%= safe_url %>"
+                           style="height:36px; v-text-anchor:middle; width:auto;"
+                           arcsize="17%"
+                           stroke="f"
+                           fillcolor="<%= email_colors[:primary] %>">
+                <w:anchorlock/>
+                <center style="color:<%= email_colors[:primary_foreground] %>; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; font-size:14px; font-weight:500; padding:0 16px;">
+                  <%= text %><% if icon_name %>&nbsp;→<% end %>
+                </center>
+              </v:roundrect>
+            <![endif]-->
+            <!--[if !mso]><!-->
+            <a href="<%= safe_url %>" style="display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 16px; background-color: <%= email_colors[:primary] %>; color: <%= email_colors[:primary_foreground] %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; font-weight: 500; text-decoration: none; border-radius: 6px; mso-hide: all;"><%= text %><% if icon_name %><%= email_icon(icon_name, size: 14, color: email_colors[:primary_foreground]) %><% end %></a>
+            <!--<![endif]-->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

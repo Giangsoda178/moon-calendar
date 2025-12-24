@@ -1,0 +1,19 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  Reminder
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0;">
+  This is a friendly reminder:
+</p>
+
+<%= render "mailers/shared/card" do %>
+  <p style="margin: 0; color: <%= email_colors[:foreground] %>;">
+    <%= @reminder[:message] || @reminder.try(:message) %>
+  </p>
+<% end %>
+
+<%= render "mailers/shared/button", text: "Take Action", url: @reminder[:url] || @reminder.try(:url) || "#", icon: :arrow_right %>

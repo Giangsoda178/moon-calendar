@@ -1,0 +1,22 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  <%= @newsletter[:title] || @newsletter.try(:title) || "Newsletter" %>
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>;">
+  <%= @newsletter[:body] || @newsletter.try(:body) || "Check out our latest updates!" %>
+</p>
+
+<% if @newsletter[:cta_url] || @newsletter.try(:cta_url) %>
+  <%= render "mailers/shared/button", text: @newsletter[:cta_text] || "Learn More", url: @newsletter[:cta_url] || @newsletter.try(:cta_url), icon: :arrow_right %>
+<% end %>
+
+<%= render "mailers/shared/divider" %>
+
+<p style="margin: 0; font-size: 12px; color: <%= email_colors[:muted_foreground] %>; text-align: center;">
+  You're receiving this because you subscribed to our newsletter.<br>
+  <a href="<%= @unsubscribe_url || "#" %>" style="color: <%= email_colors[:muted_foreground] %>;">Unsubscribe</a>
+</p>

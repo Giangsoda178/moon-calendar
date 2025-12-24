@@ -1,0 +1,19 @@
+<%# Usage: render "mailers/shared/header", logo_url: "https://..." %>
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+       style="background-color: <%= email_colors[:primary] %>; border-radius: 8px 8px 0 0;">
+  <tr>
+    <td style="padding: 24px 32px; text-align: center;">
+      <% if local_assigns[:logo_url].present? %>
+        <img src="<%= logo_url %>" alt="Logo" width="40" height="40" style="display: inline-block; border-radius: 8px; margin-bottom: 8px;">
+      <% else %>
+        <%# Base64-encoded SVG logo for Gmail/Outlook compatibility %>
+        <div style="display: inline-block; margin-bottom: 8px;">
+          <%= email_logo(size: 40, colors: email_colors) %>
+        </div>
+      <% end %>
+      <h1 style="margin: 0; color: <%= email_colors[:primary_foreground] %>; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 20px; font-weight: 600;">
+        <%= @header_title || "Your App" %>
+      </h1>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,16 @@
+<%# Usage: render "mailers/shared/badge", text: "New", variant: :primary %>
+<%# Variants: :primary, :secondary, :destructive, :outline %>
+<%# Aligns with application.css .badge-*: rounded-full (9999px), px-2 (8px), py-0.5 (2px), text-xs (12px), font-medium (500) %>
+<%
+  variants = {
+    primary: { bg: email_colors[:primary], fg: email_colors[:primary_foreground], border: "none" },
+    secondary: { bg: email_colors[:muted], fg: email_colors[:foreground], border: "none" },
+    destructive: { bg: email_colors[:destructive], fg: "#ffffff", border: "none" },
+    outline: { bg: "transparent", fg: email_colors[:foreground], border: "1px solid #{email_colors[:border]}" }
+  }
+  v = (local_assigns[:variant] || :primary).to_sym
+  c = variants[v] || variants[:primary]
+%>
+<span style="display: inline-block; background: <%= c[:bg] %>; color: <%= c[:fg] %>; border: <%= c[:border] %>; padding: 2px 8px; border-radius: 9999px; font-size: 12px; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; white-space: nowrap;">
+  <%= text %>
+</span>

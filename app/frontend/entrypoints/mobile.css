@@ -1,0 +1,126 @@
+/**
+ * =============================================================================
+ * mobile.css - Mobile-specific utilities and safe area handling
+ * =============================================================================
+ *
+ * This file contains mobile-specific CSS for:
+ * - Safe area insets (notched devices like iPhone)
+ * - Touch action manipulation (prevent double-tap zoom)
+ * - DeviceFrame preview overrides
+ * - Mobile settings components
+ *
+ * =============================================================================
+ */
+
+/* Safe area CSS custom properties (move from :root in application.css) */
+/* Note: Keep in :root block in application.css, only move utility classes */
+
+/* DeviceFrame desktop preview - override safe area values for contained preview */
+[data-device-frame] {
+    --safe-area-top: 47px;
+    --safe-area-bottom: 34px;
+    --safe-area-left: 0px;
+    --safe-area-right: 0px;
+}
+
+@layer base {
+    /* Prevent double-tap-to-zoom on iOS/mobile for interactive elements */
+    button,
+    [role="button"],
+    a,
+    input,
+    select,
+    textarea,
+    label,
+    summary,
+    [tabindex]:not([tabindex="-1"]) {
+        touch-action: manipulation;
+    }
+
+    /* Safe area padding utilities */
+    .pt-safe { padding-top: var(--safe-area-top); }
+    .pb-safe { padding-bottom: max(0px, calc(var(--safe-area-bottom, 0px) - 16px)); }
+    .pl-safe { padding-left: var(--safe-area-left); }
+    .pr-safe { padding-right: var(--safe-area-right); }
+    .px-safe {
+        padding-left: var(--safe-area-left);
+        padding-right: var(--safe-area-right);
+    }
+    .py-safe {
+        padding-top: var(--safe-area-top);
+        padding-bottom: var(--safe-area-bottom);
+    }
+    .p-safe {
+        padding-top: var(--safe-area-top);
+        padding-bottom: var(--safe-area-bottom);
+        padding-left: var(--safe-area-left);
+        padding-right: var(--safe-area-right);
+    }
+
+    /* Safe area margin utilities */
+    .mt-safe { margin-top: var(--safe-area-top); }
+    .mb-safe { margin-bottom: var(--safe-area-bottom); }
+    .ml-safe { margin-left: var(--safe-area-left); }
+    .mr-safe { margin-right: var(--safe-area-right); }
+
+    /* Safe area positioning utilities */
+    .top-safe { top: var(--safe-area-top); }
+    .bottom-safe { bottom: var(--safe-area-bottom); }
+    .left-safe { left: var(--safe-area-left); }
+    .right-safe { right: var(--safe-area-right); }
+
+    /* Height with safe areas */
+    .min-h-screen-safe {
+        min-height: calc(100dvh - var(--safe-area-top) - var(--safe-area-bottom));
+    }
+    .h-screen-safe {
+        height: calc(100dvh - var(--safe-area-top) - var(--safe-area-bottom));
+    }
+}
+
+/* Settings */
+@layer components {
+    .settings-section {
+        @apply flex flex-col gap-1;
+
+        > h3 {
+            @apply text-muted-foreground px-1 text-xs font-medium tracking-wider uppercase;
+        }
+    }
+
+    .settings-item,
+    .settings-item-button {
+        @apply flex w-full items-center justify-between gap-2 px-3 py-2 text-left;
+
+        /* Icon container slot */
+        > [data-icon] {
+            @apply flex size-7 shrink-0 items-center justify-center;
+
+            svg {
+                @apply size-5;
+            }
+        }
+
+        /* Content slot (label only) */
+        > [data-content] {
+            @apply flex min-w-0 flex-1 flex-col justify-center;
+
+            > p {
+                @apply leading-none;
+            }
+        }
+
+        /* Action slot (right side) */
+        > [data-action] {
+            @apply flex shrink-0 items-center;
+
+            > svg {
+                @apply text-muted-foreground size-5;
+            }
+        }
+    }
+
+    .settings-item-button {
+        @apply cursor-pointer transition-colors hover:bg-accent/50;
+    }
+}

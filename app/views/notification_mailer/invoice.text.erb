@@ -1,0 +1,19 @@
+Payment Receipt
+===============
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+Thank you for your payment! Here's your receipt:
+
+Invoice #: <%= @invoice[:number] || @invoice.try(:number) %>
+<% if @invoice[:date] || @invoice.try(:date) %>
+Date: <%= (@invoice[:date] || @invoice.try(:date))&.strftime("%B %d, %Y") %>
+<% end %>
+<% if @invoice[:description] || @invoice.try(:description) %>
+Description: <%= @invoice[:description] || @invoice.try(:description) %>
+<% end %>
+Total: <%= @invoice[:amount] || @invoice.try(:amount) %>
+
+View invoice: <%= @invoice[:url] || @invoice.try(:url) || "[invoice link]" %>
+
+Questions about this charge? Reply to this email or contact our support team.

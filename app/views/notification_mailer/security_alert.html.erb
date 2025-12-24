@@ -1,0 +1,47 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:destructive] || email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  Security Alert
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0;">
+  We detected unusual activity on your account that you should be aware of:
+</p>
+
+<%= render "mailers/shared/card" do %>
+  <p style="margin: 0 0 8px 0; font-weight: 600; color: <%= email_colors[:foreground] %>;">
+    <%= @event[:type] || @event.try(:type) || "Security Event" %>
+  </p>
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
+    <% if @event[:ip_address] || @event.try(:ip_address) %>
+    <tr>
+      <td style="padding: 4px 0; color: <%= email_colors[:muted_foreground] %>; font-size: 14px;">IP Address:</td>
+      <td style="padding: 4px 0; text-align: right; color: <%= email_colors[:foreground] %>; font-size: 14px;"><%= @event[:ip_address] || @event.try(:ip_address) %></td>
+    </tr>
+    <% end %>
+    <% if @event[:location] || @event.try(:location) %>
+    <tr>
+      <td style="padding: 4px 0; color: <%= email_colors[:muted_foreground] %>; font-size: 14px;">Location:</td>
+      <td style="padding: 4px 0; text-align: right; color: <%= email_colors[:foreground] %>; font-size: 14px;"><%= @event[:location] || @event.try(:location) %></td>
+    </tr>
+    <% end %>
+    <% if @event[:device] || @event.try(:device) %>
+    <tr>
+      <td style="padding: 4px 0; color: <%= email_colors[:muted_foreground] %>; font-size: 14px;">Device:</td>
+      <td style="padding: 4px 0; text-align: right; color: <%= email_colors[:foreground] %>; font-size: 14px;"><%= @event[:device] || @event.try(:device) %></td>
+    </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<p style="margin: 16px 0;">
+  <strong>Was this you?</strong> If you recognize this activity, no further action is needed.
+</p>
+
+<%= render "mailers/shared/button", text: "Secure My Account", url: @event[:secure_url] || @event.try(:secure_url) || "#", icon: :lock %>
+
+<p style="margin: 16px 0 0 0; font-size: 14px; color: <%= email_colors[:muted_foreground] %>;">
+  If this wasn't you, please change your password immediately and enable two-factor authentication.
+</p>

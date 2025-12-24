@@ -1,0 +1,10 @@
+Reminder
+========
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+This is a friendly reminder:
+
+<%= @reminder[:message] || @reminder.try(:message) %>
+
+Take action: <%= @reminder[:url] || @reminder.try(:url) || "[reminder link]" %>

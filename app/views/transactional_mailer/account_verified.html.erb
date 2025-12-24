@@ -1,0 +1,20 @@
+<h2 style="margin: 0 0 16px 0; color: <%= email_colors[:foreground] %>; font-size: 24px; font-weight: 600;">
+  Your Email is Verified!
+</h2>
+
+<p style="margin: 0 0 16px 0;">
+  Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+</p>
+
+<p style="margin: 0 0 16px 0;">
+  Great news! Your email address has been successfully verified. Your account is now fully activated.
+</p>
+
+<%= render "mailers/shared/card" do %>
+  <p style="margin: 0; color: <%= email_colors[:foreground] %>;">
+    <strong>What's next?</strong><br>
+    You now have full access to all features. Start exploring and make the most of your account.
+  </p>
+<% end %>
+
+<%= render "mailers/shared/button", text: "Go to Dashboard", url: @dashboard_url || "#", icon: :arrow_right %>

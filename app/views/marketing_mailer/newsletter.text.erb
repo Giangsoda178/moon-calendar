@@ -1,0 +1,14 @@
+<%= @newsletter[:title] || @newsletter.try(:title) || "Newsletter" %>
+<%= "=" * (@newsletter[:title] || @newsletter.try(:title) || "Newsletter").length %>
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+<%= @newsletter[:body] || @newsletter.try(:body) || "Check out our latest updates!" %>
+
+<% if @newsletter[:cta_url] || @newsletter.try(:cta_url) %>
+Learn more: <%= @newsletter[:cta_url] || @newsletter.try(:cta_url) %>
+<% end %>
+
+---
+You're receiving this because you subscribed to our newsletter.
+Unsubscribe: <%= @unsubscribe_url || "[unsubscribe link]" %>

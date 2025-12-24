@@ -1,0 +1,7 @@
+---
+# Brakeman configuration
+# https://brakemanscanner.org/docs/options/
+
+# Exclude reference directories from scanning
+:skip_files:
+  - references/

@@ -1,2 +1,60 @@
 #!/usr/bin/env ruby
-exec "./bin/rails", "server", *ARGV
+# frozen_string_literal: true
+
+def run_dev
+  approach = choose_run_dev_approach
+  return run_via_run_pty if approach == :run_pty
+
+  run_via_forman
+end
+
+def run_via_run_pty
+  unless File.exist?("run-pty.json")
+    puts "run-pty.json is required to run the application using run-pty."
+    exit 1
+  end
+
+  exec "npx", "run-pty", "run-pty.json", *ARGV
+end
+
+def run_via_forman
+  if command_exists?('overmind')
+    exec("overmind", "start", "-f", "Procfile.dev", *ARGV)
+  end
+
+  if command_exists?('hivemind')
+    puts 'Hivemind is installed. Running the application with Hivemind...'
+    exec("hivemind", "Procfile.dev", *ARGV)
+  end
+
+  unless gem_installed?('foreman')
+    puts 'Installing foreman...'
+    run "gem install foreman"
+  end
+
+  exec "foreman", "start", "-f", "Procfile.dev", *ARGV
+end
+
+def choose_run_dev_approach
+  if ARGV.include?("foreman") || ARGV.include?("--vite-only")
+    ARGV.delete("foreman")
+    ARGV.delete("--vite-only")
+    return :foreman
+  end
+
+  :run_pty
+end
+
+def gem_installed?(gem_name)
+  system("gem list --no-installed --exact --silent #{gem_name}")
+end
+
+def command_exists?(command)
+  system("command -v #{command} > /dev/null 2>&1")
+end
+
+# =============================================================================
+# MAIN ENTRY POINT
+# =============================================================================
+
+run_dev

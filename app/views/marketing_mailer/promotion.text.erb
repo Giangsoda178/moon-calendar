@@ -1,0 +1,23 @@
+<%= @promotion[:title] || @promotion.try(:title) || "Special Offer" %>
+<%= "=" * (@promotion[:title] || @promotion.try(:title) || "Special Offer").length %>
+
+Hi <%= @user.respond_to?(:name) ? @user.name : "there" %>,
+
+<%= @promotion[:description] || @promotion.try(:description) || "We have a special offer just for you!" %>
+
+<% if @promotion[:discount] || @promotion.try(:discount) %>
+<%= @promotion[:discount] || @promotion.try(:discount) %>
+<% end %>
+<% if @promotion[:code] || @promotion.try(:code) %>
+Use code: <%= @promotion[:code] || @promotion.try(:code) %>
+<% end %>
+<% if @promotion[:expires_at] || @promotion.try(:expires_at) %>
+Expires: <%= (@promotion[:expires_at] || @promotion.try(:expires_at))&.strftime("%B %d, %Y") || "Limited time" %>
+<% end %>
+
+Shop now: <%= @promotion[:cta_url] || @promotion.try(:cta_url) || "[shop link]" %>
+
+* <%= @promotion[:terms] || @promotion.try(:terms) || "Terms and conditions apply." %>
+
+---
+Unsubscribe: <%= @unsubscribe_url || "[unsubscribe link]" %>
