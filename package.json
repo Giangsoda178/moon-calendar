@@ -43,6 +43,7 @@
     "vitest": "^4.0.15"
   },
   "dependencies": {
+    "@forvn/vn-lunar-calendar": "^0.0.2",
     "@inertiajs/core": "^2.2.21",
     "@inertiajs/svelte": "^2.2.21",
     "@rails/actioncable": "^8.1.100",
