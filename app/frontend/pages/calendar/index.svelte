@@ -116,32 +116,30 @@
 
 <CalendarLayout>
   <div class="flex min-w-0 flex-col gap-6">
-    <h2 class="text-3xl font-bold">Lunar Calendar</h2>
-
     <main class="main-content">
       <h1 class="month-title">{monthNames[displayMonth]} {displayYear}</h1>
 
-      <div class="calendar-btns">
-        <button
-          class="btn left-btn"
-          onclick={prevMonth}
-          aria-label="Previous month"
-        >
-          <ChevronLeft />
-        </button>
-        <button class="btn today-btn" onclick={goToToday} aria-pressed="false"
-          >Today</button
-        >
-        <button
-          class="btn right-btn"
-          onclick={nextMonth}
-          aria-label="Next month"
-        >
-          <ChevronRight />
-        </button>
-      </div>
-
       <div class="calendar-table-wrapper">
+        <div class="calendar-btns">
+          <button
+            class="btn left-btn"
+            onclick={prevMonth}
+            aria-label="Previous month"
+          >
+            <ChevronLeft />
+          </button>
+          <button class="btn today-btn" onclick={goToToday} aria-pressed="false"
+            >Today</button
+          >
+          <button
+            class="btn right-btn"
+            onclick={nextMonth}
+            aria-label="Next month"
+          >
+            <ChevronRight />
+          </button>
+        </div>
+
         <table
           class="calendar-table"
           role="grid"
