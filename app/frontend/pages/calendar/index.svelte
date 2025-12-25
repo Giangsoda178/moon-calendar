@@ -206,7 +206,7 @@
 
 <style lang="postcss">
   .month-title {
-    margin: 1rem auto 0;
+    margin: 0 auto;
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
@@ -215,7 +215,7 @@
 
   .calendar-btns {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     gap: 0.25rem;
     margin-left: 2rem;
@@ -228,7 +228,8 @@
   }
 
   .calendar-table-wrapper {
-    margin-top: 1.5rem;
+    width: fit-content;
+    margin: 2rem auto;
     border-radius: 16px;
     overflow-x: auto;
   }
@@ -236,14 +237,18 @@
   .calendar-table {
     border-collapse: separate;
     table-layout: fixed;
-    margin: auto;
-  }
+    margin: 1rem auto;
 
-  .calendar-table th,
-  .calendar-table td {
-    padding: 0.5rem 0.75rem;
-    text-align: center;
-    vertical-align: middle;
+    th,
+    td {
+      padding: 0.5rem 0.75rem;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    tr {
+      border-bottom: 1px solid red;
+    }
   }
 
   .cell-inner {
@@ -256,9 +261,10 @@
     border-radius: 12px;
     box-sizing: border-box;
     cursor: pointer;
+    border-bottom: 1px solid var(--color-border);
 
     &:hover {
-      background-color: green;
+      background-color: var(--color-sidebar-accent);
     }
 
     .solar-date {
