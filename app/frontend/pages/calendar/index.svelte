@@ -8,9 +8,18 @@
   let displayYear = $state(new Date().getFullYear())
   let displayMonth = $state(new Date().getMonth())
 
+  function dateToISO(d: Date) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+  }
+
+  function isoToDate(iso: string) {
+    const [y, m, d] = iso.split("-").map(Number)
+    return new Date(y, m - 1, d)
+  }
+
   // Get today's date for highlight
   const today = new Date()
-  const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`
+  const todayISO = dateToISO(today)
 
   // Selected date as ISO string (YYYY-MM-DD)
   let selectedISO = $state<string | null>(null)
@@ -126,6 +135,35 @@
     if (selectedISO) return
     selectedISO = todayISO
   })
+
+  function setSelectedDate(iso: string) {
+    selectedISO = iso
+    const d = isoToDate(iso)
+    const y = d.getFullYear()
+    const m = d.getMonth()
+
+    if (displayYear !== y || displayMonth !== m) {
+      displayYear = y
+      displayMonth = m
+      grid = buildGrid(displayYear, displayMonth)
+    }
+  }
+
+  function offsetSelectedBy(days: number) {
+    const base = selectedISO ? isoToDate(selectedISO) : isoToDate(todayISO)
+    const d = new Date(base.getTime())
+    d.setDate(d.getDate() + days)
+    setSelectedDate(dateToISO(d))
+  }
+
+  function prevDay() {
+    offsetSelectedBy(-1)
+  }
+
+  function nextDay() {
+    offsetSelectedBy(1)
+  }
+
   function prevMonth() {
     if (displayMonth === 0) {
       displayMonth = 11
@@ -258,22 +296,18 @@
         <div class="date-info-wrapper">
           <button
             class="btn left-btn"
-            onclick={prevMonth}
-            aria-label="Previous month"
+            onclick={prevDay}
+            aria-label="Previous day"
           >
             <ChevronLeft />
           </button>
           <div class="date-info">
-            <span>Solar</span>
+            <span class="type">Solar</span>
             <span class="date">{selectedSolarDate ?? ""}</span>
             <span class="month-year">{selectedSolarMonthYear ?? ""}</span>
           </div>
           <div class="date-info"></div>
-          <button
-            class="btn right-btn"
-            onclick={nextMonth}
-            aria-label="Next month"
-          >
+          <button class="btn right-btn" onclick={nextDay} aria-label="Next day">
             <ChevronRight />
           </button>
         </div>
