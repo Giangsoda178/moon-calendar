@@ -4,6 +4,31 @@
   import { LunarCalendar } from "@forvn/vn-lunar-calendar"
   import { onMount } from "svelte"
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ]
+  const monthShortNames = monthNames.map((m) => m.slice(0, 3))
+  const weekdayNames = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ]
+
   // Default display month/year to the current date
   let displayYear = $state(new Date().getFullYear())
   let displayMonth = $state(new Date().getMonth())
@@ -37,30 +62,34 @@
     return `${monthNames[monthIndex]} ${year}`
   })
 
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ]
-  const monthShortNames = monthNames.map((m) => m.slice(0, 3))
-  const weekdayNames = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ]
+  let selectedLunarDate = $derived.by(() => {
+    if (!selectedISO) return null
+
+    const d = isoToDate(selectedISO)
+    const lunar = LunarCalendar.fromSolar(
+      d.getDate(),
+      d.getMonth() + 1,
+      d.getFullYear(),
+    )
+
+    return lunar.lunarDate.day
+  })
+
+  let selectedLunarMonthYear = $derived.by(() => {
+    if (!selectedISO) return null
+
+    const d = isoToDate(selectedISO)
+    const lunar = LunarCalendar.fromSolar(
+      d.getDate(),
+      d.getMonth() + 1,
+      d.getFullYear(),
+    )
+
+    const monthIndex = lunar.lunarDate.month - 1
+    const year = lunar.lunarDate.year
+
+    return `${monthNames[monthIndex]} ${year}`
+  })
 
   function formatShortDate(d: Date) {
     return `${String(d.getDate()).padStart(2, "0")}`
@@ -306,7 +335,11 @@
             <span class="date">{selectedSolarDate ?? ""}</span>
             <span class="month-year">{selectedSolarMonthYear ?? ""}</span>
           </div>
-          <div class="date-info"></div>
+          <div class="date-info">
+            <span class="type">Lunar</span>
+            <span class="date">{selectedLunarDate ?? ""}</span>
+            <span class="month-year">{selectedLunarMonthYear ?? ""}</span>
+          </div>
           <button class="btn right-btn" onclick={nextDay} aria-label="Next day">
             <ChevronRight />
           </button>
