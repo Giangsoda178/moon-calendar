@@ -391,8 +391,41 @@
 
       &.first-day,
       &.mid-day {
-        font-weight: 600;
+        font-weight: 700;
         color: var(--color-destructive);
+      }
+    }
+  }
+
+  .calendar-table .day.today .cell-inner {
+    background-color: var(--color-accent);
+  }
+
+  .date-info-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8rem;
+    margin: 2rem auto;
+
+    .date-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .type {
+        font-size: 2rem;
+        font-weight: 500;
+      }
+
+      .date {
+        font-size: 5rem;
+        font-weight: 700;
+      }
+
+      .month-year {
+        font-size: 2rem;
+        font-weight: 500;
       }
     }
   }
