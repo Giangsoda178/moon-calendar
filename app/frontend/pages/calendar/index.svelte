@@ -2,6 +2,7 @@
   import CalendarLayout from "@/layouts/CalendarLayout.svelte"
   import { ChevronLeft, ChevronRight } from "@lucide/svelte"
   import { LunarCalendar } from "@forvn/vn-lunar-calendar"
+  import { onMount } from "svelte"
 
   // Default display month/year to the current date
   let displayYear = $state(new Date().getFullYear())
@@ -108,6 +109,10 @@
   // Reactive grid for the current display month
   let grid = $state(buildGrid(displayYear, displayMonth))
 
+  onMount(() => {
+    if (selectedISO) return
+    selectedISO = todayISO
+  })
   function prevMonth() {
     if (displayMonth === 0) {
       displayMonth = 11
@@ -138,7 +143,6 @@
 
   function selectCell(iso: string | null) {
     if (!iso) return
-    if (iso < todayISO) return
     selectedISO = iso === selectedISO ? null : iso
   }
 </script>
