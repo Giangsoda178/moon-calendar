@@ -15,6 +15,19 @@
   // Selected date as ISO string (YYYY-MM-DD)
   let selectedISO = $state<string | null>(null)
 
+  let selectedSolarDate = $derived(
+    selectedISO ? selectedISO.slice(8, 10) : null,
+  )
+
+  let selectedSolarMonthYear = $derived.by(() => {
+    if (!selectedISO) return null
+
+    const monthIndex = Number(selectedISO.slice(5, 7)) - 1
+    const year = selectedISO.slice(0, 4)
+
+    return `${monthNames[monthIndex]} ${year}`
+  })
+
   const monthNames = [
     "January",
     "February",
@@ -242,6 +255,28 @@
             {/each}
           </tbody>
         </table>
+        <div class="date-info-wrapper">
+          <button
+            class="btn left-btn"
+            onclick={prevMonth}
+            aria-label="Previous month"
+          >
+            <ChevronLeft />
+          </button>
+          <div class="date-info">
+            <span>Solar</span>
+            <span class="date">{selectedSolarDate ?? ""}</span>
+            <span class="month-year">{selectedSolarMonthYear ?? ""}</span>
+          </div>
+          <div class="date-info"></div>
+          <button
+            class="btn right-btn"
+            onclick={nextMonth}
+            aria-label="Next month"
+          >
+            <ChevronRight />
+          </button>
+        </div>
       </div>
     </main>
   </div>
